@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdbool.h>
+void subsetSum(int arr[], int n, int sum, int subset[], int subsetSize, int totalSum, int idx) {
+    if (sum == totalSum) {
+        printf("Subset with the given sum is: ");
+        for (int i = 0; i < subsetSize; i++) {
+            printf("%d ", subset[i]);
+        }
+        printf("\n");
+        return;
+    }
+    if (idx >= n || sum > totalSum)
+        return;
+    subset[subsetSize] = arr[idx];
+    subsetSum(arr, n, sum + arr[idx], subset, subsetSize + 1, totalSum, idx + 1);
+    subsetSum(arr, n, sum, subset, subsetSize, totalSum, idx + 1);
+}
+int main() {
+    int n, totalSum;
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+    int arr[n];
+    printf("Enter the elements: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    printf("Enter the total sum to find subsets: ");
+    scanf("%d", &totalSum);
+    int subset[n]; 
+    subsetSum(arr, n, 0, subset, 0, totalSum, 0); 
+    return 0;
+}
