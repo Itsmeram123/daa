@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+// Node structure for a binary search tree
+struct Node {
+    int key;
+    int freq;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Function to create a new node
+struct Node* createNode(int key, int freq) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+    newNode->key = key;
+    newNode->freq = freq;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Function to construct optimal binary search tree recursively
+struct Node* constructOptimalBST(int keys[], int freq[], int start, int end) {
+    if (start > end)
+        return NULL;
+
+    int minCost = INT_MAX;
+    int rootIndex = -1;
+
+    // Try every key as root
+    for (int i = start; i <= end; i++) {
+        int cost = 0;
+        for (int j = start; j <= end; j++) {
+            if (j < i)
+                cost += freq[j];
+            else if (j > i)
+                cost += freq[j];
+            else
+                cost += freq[j];
+        }
+
+        if (cost < minCost) {
+            minCost = cost;
+            rootIndex = i;
+        }
+    }
+
+    // Construct the root node
+    struct Node* root = createNode(keys[rootIndex], freq[rootIndex]);
+
+    // Recursively construct left and right subtrees
+    root->left = constructOptimalBST(keys, freq, start, rootIndex - 1);
+    root->right = constructOptimalBST(keys, freq, rootIndex + 1, end);
+
+    return root;
+}
+
+// Function to calculate total cost of searches in BST
+int totalSearchCost(struct Node* root, int level) {
+    if (root == NULL)
+        return 0;
+    return root->freq * level +
+           totalSearchCost(root->left, level + 1) +
+           totalSearchCost(root->right, level + 1);
+}
+
+int main() {
+    int n;
+    printf("Enter the number of keys: ");
+    scanf("%d", &n);
+
+    int keys[n], freq[n];
+    printf("Enter the keys and their frequencies:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d %d", &keys[i], &freq[i]);
+    }
+
+    struct Node* root = constructOptimalBST(keys, freq, 0, n - 1);
+
+    int totalCost = totalSearchCost(root, 1);
+    printf("Total cost of optimal binary search tree: %d\n", totalCost);
+
+    return 0;
+}
