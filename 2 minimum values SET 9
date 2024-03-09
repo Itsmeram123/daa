@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+void printFirstTwoMin(int arr[], int size) {
+    int min1 = arr[0], min2 = arr[1];
+
+    // Find the first and second minimum values
+    for (int i = 2; i < size; i++) {
+        if (arr[i] < min1) {
+            min2 = min1;
+            min1 = arr[i];
+        } else if (arr[i] < min2 && arr[i] != min1) {
+            min2 = arr[i];
+        }
+    }
+
+    printf("(%d, %d)\n", min1, min2);
+}
+
+int main() {
+    int size;
+    printf("Enter the size of the array: ");
+    scanf("%d", &size);
+
+    int arr[size];
+    printf("Enter the elements of the array: ");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printFirstTwoMin(arr, size);
+
+    return 0;
+}
